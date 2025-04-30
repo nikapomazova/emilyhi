@@ -56,20 +56,7 @@ signButton.addEventListener("click", async () => {
             alert('Verification email sent! Check your inbox (and spam folder!).');
             window.location.href = '/logIn.html';
           } catch (error) {
-
-            switch(error.code) {
-              case 'auth/email-already-in-use':
-                errorElement.textContent = 'Email already registered. Try logging in.';
-                break;
-              case 'auth/invalid-email':
-                errorElement.textContent = 'Invalid email format.';
-                break;
-              case 'auth/weak-password':
-                errorElement.textContent = 'Password must be at least 6 characters.';
-                break;
-              default:
-                errorElement.textContent = error.message;
-            }
+            console.log(error);
         }
     } else {
         alert("Please, enter the same password (6 characters minimum) in the second field.");
