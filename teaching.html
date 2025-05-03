@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morse Code Full Screen</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      color: #333;
+      cursor: pointer;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    
+    #letter {
+      font-size: 30vh;
+      font-weight: bold;
+      line-height: 0.8;
+      margin-bottom: 2vh;
+    }
+    
+    #morse {
+      font-size: 15vh;
+      letter-spacing: 3vw;
+      color: #0066cc;
+      margin-bottom: 5vh;
+      font-family: monospace;
+    }
+    
+    .instructions {
+      font-size: 4vh;
+      color: #666;
+      text-align: center;
+      padding: 0 5vw;
+    }
+    
+    @media (orientation: portrait) {
+      #letter {
+        font-size: 25vh;
+      }
+      #morse {
+        font-size: 12vh;
+      }
+      .instructions {
+        font-size: 3vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="letter">A</div>
+  <div id="morse">.-</div>
+  <div class="instructions">
+    Press SPACE once to hear<br>
+    Press twice for next character<br>
+    Tap anywhere for instructions
+  </div>
+
+  <script>
+    const morseCode = {
+      'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 
+      'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 
+      'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 
+      'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 
+      'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 
+      'Z': '--..'
+    };
+    
+    const letterEl = document.getElementById('letter');
+    const morseEl = document.getElementById('morse');
+    
+    const letters = Object.keys(morseCode);
+    let currentIndex = 0;
+    let isSpeaking = false;
+    
+    function speak(text, callback) {
+      if ('speechSynthesis' in window) {
+        isSpeaking = true;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        speechSynthesis.cancel();
+        
+        utterance.onend = function() {
+          isSpeaking = false;
+          if (callback) callback();
+        };
+        
+        speechSynthesis.speak(utterance);
+      }
+    }
+    
+    function updateDisplay() {
+      const letter = letters[currentIndex];
+      letterEl.textContent = letter;
+      morseEl.textContent = morseCode[letter];
+    }
+    
+    // Play Morse code as sound
+    function playMorseTone(code, callback) {
+      if (!('AudioContext' in window || 'webkitAudioContext' in window)) return;
+      
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContext();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.value = 600;
+      gainNode.gain.value = 0;
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.start();
+      
+      let time = audioContext.currentTime;
+      const dotLength = 0.1;
+      const dashLength = 0.3;
+      const symbolSpace = 0.1;
+      
+      for (const symbol of code) {
+        const duration = symbol === '.' ? dotLength : dashLength;
+        
+        gainNode.gain.setValueAtTime(1, time);
+        gainNode.gain.setValueAtTime(0, time + duration);
+        
+        time += duration + symbolSpace;
+      }
+      
+      oscillator.stop(time + 1);
+      
+      setTimeout(callback, (time - audioContext.currentTime) * 1000);
+    }
+    
+    function speakCurrent() {
+      if (isSpeaking) return;
+      
+      const letter = letters[currentIndex];
+      const code = morseCode[letter];
+      
+      speak(letter, function() {
+        playMorseTone(code, function() {
+          speak(code.split('').join(' '));
+        });
+      });
+    }
+    
+    let lastKeyTime = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        const currentTime = Date.now();
+        
+        if (currentTime - lastKeyTime < 300) {
+          currentIndex = (currentIndex + 1) % letters.length;
+          updateDisplay();
+          speakCurrent();
+        } else {
+          speakCurrent();
+        }
+        
+        lastKeyTime = currentTime;
+      }
+    });
+    
+    function speakInstructions() {
+      speak("Morse Code Learner. Press space once to hear the current letter and its Morse code. Press space twice quickly to move to the next letter. Tap anywhere to hear these instructions again.");
+    }
+    
+    // Click/tap anywhere to repeat instructions
+    document.addEventListener('click', function() {
+      speakInstructions();
+    });
+    
+    document.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      speakInstructions();
+    });
+    
+    // Initialize
+    updateDisplay();
+    setTimeout(speakInstructions, 500);
+    
+    document.body.tabIndex = 0;
+    document.body.focus();
+  </script>
+</body>
+</html>
