@@ -159,23 +159,26 @@
     }
     
     let lastKeyTime = 0;
-    let firstKeyPressed = false;
+    let tapTimer = null;
     document.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
         e.preventDefault();
         const currentTime = Date.now();
         
-        if (currentTime - lastKeyTime < 300 && firstKeyPressed) {
+        if (currentTime - lastKeyTime < 300) {
+            clearTimeout(tapTimer); // cancel the pending speak
             currentIndex = (currentIndex + 1) % letters.length;
             updateDisplay();
             speakCurrent();
-            firstKeyPressed = false;
+            lastKeyTime = currentTime;
         } else {
-            firstKeyPressed = true;
-            speakCurrent();
+            lastKeyTime = currentTime;
+            tapTimer = setTimeout(() => {
+                speakCurrent(); // run only if second press didn't happen
+            }, 300);
         }
-        
-        lastKeyTime = currentTime;
+
+        speakCurrent();
       }
     });
     
