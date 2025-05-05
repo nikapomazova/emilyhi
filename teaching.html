@@ -159,17 +159,20 @@
     }
     
     let lastKeyTime = 0;
+    let firstKeyPressed = false;
     document.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
         e.preventDefault();
         const currentTime = Date.now();
         
-        if (currentTime - lastKeyTime < 300) {
-          currentIndex = (currentIndex + 1) % letters.length;
-          updateDisplay();
-          speakCurrent();
+        if (currentTime - lastKeyTime < 300 && firstKeyPressed) {
+            currentIndex = (currentIndex + 1) % letters.length;
+            updateDisplay();
+            speakCurrent();
+            firstKeyPressed = false;
         } else {
-          speakCurrent();
+            firstKeyPressed = true;
+            speakCurrent();
         }
         
         lastKeyTime = currentTime;
