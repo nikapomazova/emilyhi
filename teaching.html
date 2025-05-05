@@ -153,9 +153,7 @@
       const code = morseCode[letter];
       
       speak(letter, function() {
-        playMorseTone(code, function() {
-          speak(code.split('').join(' '));
-        });
+        playMorseTone(code);
       });
     }
     
