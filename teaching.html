@@ -152,11 +152,11 @@
       const letter = letters[currentIndex];
       const code = morseCode[letter];
       
-      speak(letter, function() {
-        playMorseTone(code, function() {
-          speak(code.split('').join(' '));
-        });
-      });
+    //   speak(letter, function() {
+    //     playMorseTone(code, function() {
+    //       speak(code.split('').join(' '));
+    //     });
+    //   });
     }
     
     let lastKeyTime = 0;
