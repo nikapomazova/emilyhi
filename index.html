@@ -396,7 +396,24 @@
     </a>
   </div>
 
-  <script>
+  <script type="module">
+
+    import {initAuthListener} from './isSignedIn.js';
+    document.addEventListener('DOMContentLoaded', initAuthListener);
+
+    let currentUser = null;
+
+    auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      currentUser = user;
+      console.log("Current user:", user.uid);
+      await loadUserItems();
+    } else {
+      currentUser = null;
+      console.log("No one signed in.");
+    }
+  });
+
     const morseToChar = {
       '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E',
       '..-.': 'F', '--.': 'G', '..--': ' ', '....': 'H', '..': 'I', 
@@ -582,11 +599,26 @@
     }
 
     // Todo List Functions
-    function addTodoItem(text) {
+    async function addTodoItem(text) {
       if (!text.trim()) return;
       todoItems.push(text);
       renderTodoList();
       speak(`Added: ${text}`);
+
+      if (currentUser) {
+        const colRef = collection(db, "users", currentUser.uid, "todos");
+        await addDoc(colRef, { text, created: Date.now() });
+      }
+    }
+
+    async function loadUserItems() {
+      if (!currentUser) return;
+      const snapshot = await getDocs(collection(db, "users", currentUser.uid, "todos"));
+      todoItems = [];
+      snapshot.forEach(doc => {
+        todoItems.push(doc.data().text);
+      });
+      renderTodoList();
     }
 
     function renderTodoList() {
@@ -603,10 +635,21 @@
       itemCountEl.textContent = todoItems.length;
     }
 
-    function removeItem(index) {
+    async function removeItem(index) {
       const item = todoItems[index];
       todoItems.splice(index, 1);
       renderTodoList();
+
+      if (currentUser) {
+        const colRef = collection(db, "users", currentUser.uid, "todos");
+        const snapshot = await getDocs(colRef);
+        snapshot.forEach(docSnap => {
+          if (docSnap.data().text === item) {
+            deleteDoc(doc(db, "users", currentUser.uid, "todos", docSnap.id));
+          }
+        });
+      }
+
       updateStatus(`Removed: ${item}`);
     }
 
