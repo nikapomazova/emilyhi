@@ -399,6 +399,7 @@
   <script type="module">
 
     import {initAuthListener} from './isSignedIn.js';
+    import {auth} from "./firebaseInitializing/js";
     document.addEventListener('DOMContentLoaded', initAuthListener);
 
     let currentUser = null;
