@@ -569,10 +569,15 @@
     function convertMorse() {
       if (currentMorse) {
         const char = morseToChar[currentMorse] || '?';
-        textOutputEl.textContent += char;
+        if (char) {
+          textOutputEl.textContent += char;
+          updateStatus(`Converted to: ${char === ' ' ? '[Space]' : char}`);
+        } else {
+          updateStatus("This is not a valid symbol.");
+        }
+
         currentMorse = '';
         morseSequenceEl.textContent = '';
-        updateStatus(`Converted to: ${char === ' ' ? '[Space]' : char}`);
       }
       resetTapState();
       resetInactivityTimer();
