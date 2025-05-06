@@ -213,6 +213,7 @@
     document.addEventListener('click', function() {
         const backButton = document.getElementById('backButton');
         if (backButton && backButton.contains(e.target)) {
+            speak("Pressed back button.");
             return;
         }
         speakInstructions();
