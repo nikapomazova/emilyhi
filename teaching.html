@@ -84,7 +84,7 @@
 </head>
 <body>
 
-    <button class="back-button" onclick="window.location.href='index.html'">Back</button>
+    <button class="back-button" onclick="window.location.href='index.html'" id="backButton">Back</button>
 
   <div id="letter">A</div>
   <div id="morse">.-</div>
@@ -211,7 +211,11 @@
     }
     
     document.addEventListener('click', function() {
-      speakInstructions();
+        const backButton = document.getElementById('backButton');
+        if (backButton && backButton.contains(e.target)) {
+            return;
+        }
+        speakInstructions();
     });
     
     document.addEventListener('touchend', function(e) {
