@@ -94,6 +94,7 @@ h2 {
 /* buttons */
 
 #signupButton:enabled {
+    border: 2px solid #8a8ac7;
     display: block;
     margin: 10px auto;
     padding: 10 20;
@@ -103,7 +104,7 @@ h2 {
   }
 
   #signupButton:disabled {
-    border: 2px solid #393ba0;
+    border: 2px solid #8a8ac7;
     display: block;
     margin: 10px auto;
     padding: 10 20;
@@ -112,6 +113,7 @@ h2 {
   }
 
 #loginButton:enabled {
+    border: 2px solid #8a8ac7;
     display: block;
     margin: 10px auto;
     padding: 10 20;
@@ -121,6 +123,7 @@ h2 {
   }
 
   #loginButton:disabled {
+    border: 2px solid #8a8ac7;
     display: block;
     margin: 10px auto;
     padding: 10 20;
@@ -144,7 +147,7 @@ h2 {
 }
 
 button, input, textarea {
-    border: 2px solid #dadaf3;
+    border: 2px solid #8a8ac7;
     transition: border-color 0.3s ease;
     font-family: var(--main-font); /*for inheriting the font*/
     font-optical-sizing: auto;
