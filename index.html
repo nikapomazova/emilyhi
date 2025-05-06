@@ -568,7 +568,7 @@
 
     function convertMorse() {
       if (currentMorse) {
-        const char = morseToChar[currentMorse] || '?';
+        const char = morseToChar[currentMorse];
         if (char) {
           textOutputEl.textContent += char;
           updateStatus(`Converted to: ${char === ' ' ? '[Space]' : char}`);
