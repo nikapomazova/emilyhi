@@ -103,12 +103,12 @@ h2 {
   }
 
   #signupButton:disabled {
-    border: 2px solid #c46d76;
+    border: 2px solid #393ba0;
     display: block;
     margin: 10px auto;
     padding: 10 20;
     color: #393ba0;
-    background-color: #dadaf3;
+    background-color: #ffffff;
   }
 
 #loginButton:enabled {
@@ -125,7 +125,7 @@ h2 {
     margin: 10px auto;
     padding: 10 20;
     color: #393ba0;
-    background-color: #dadaf3;
+    background-color: #ffffff;
   }
 
   #redirectButton{
