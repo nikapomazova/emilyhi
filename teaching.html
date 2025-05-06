@@ -24,6 +24,26 @@
       cursor: pointer;
       overflow: hidden;
       touch-action: manipulation;
+      position: relative; 
+    }
+    
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      z-index: 100;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .back-button:hover {
+      background: #0055aa;
     }
     
     #letter {
@@ -62,6 +82,9 @@
   </style>
 </head>
 <body>
+
+    <button class="back-button" onclick="window.location.href='index.html'">Back</button>
+
   <div id="letter">A</div>
   <div id="morse">.-</div>
   <div class="instructions">
@@ -166,7 +189,7 @@
         const currentTime = Date.now();
         
         if (currentTime - lastKeyTime < 300) {
-            clearTimeout(tapTimer); // cancel the pending speak
+            clearTimeout(tapTimer); 
             currentIndex = (currentIndex + 1) % letters.length;
             updateDisplay();
             speakCurrent();
@@ -174,7 +197,7 @@
         } else {
             lastKeyTime = currentTime;
             tapTimer = setTimeout(() => {
-                speakCurrent(); // run only if second press didn't happen
+                speakCurrent(); 
             }, 300);
         }
 
@@ -186,7 +209,6 @@
       speak("Morse Code Learner. Press space once to hear the current letter and its Morse code. Press space twice quickly to move to the next letter. Tap anywhere to hear these instructions again.");
     }
     
-    // Click/tap anywhere to repeat instructions
     document.addEventListener('click', function() {
       speakInstructions();
     });
@@ -196,7 +218,6 @@
       speakInstructions();
     });
     
-    // Initialize
     updateDisplay();
     setTimeout(speakInstructions, 500);
     
