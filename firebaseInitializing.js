@@ -8,7 +8,7 @@ import {
   signOut,
   applyActionCode
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, collection, addDoc, query, where, getDocs, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, addDoc, query, where, getDocs, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAQx2RwxCnb2FBfJI3uwqdXxd6Nc8cE60U",
@@ -39,4 +39,5 @@ export { auth,
     where,
     getDocs,
     updateDoc,
+    deleteDoc,
     getDoc };

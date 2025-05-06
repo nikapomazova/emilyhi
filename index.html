@@ -399,6 +399,7 @@
   <script type="module">
 
     import {initAuthListener} from './isSignedIn.js';
+    import {auth, db, getDocs, collection, setDoc, addDoc, doc, deleteDoc} from "./firebaseInitializing.js?v1.0.1";
     document.addEventListener('DOMContentLoaded', initAuthListener);
 
     let currentUser = null;
@@ -567,11 +568,17 @@
 
     function convertMorse() {
       if (currentMorse) {
-        const char = morseToChar[currentMorse] || '?';
-        textOutputEl.textContent += char;
+        const char = morseToChar[currentMorse] || "";
+        console.log("the character is:" + char + ".");
+        if (char) {
+          textOutputEl.textContent += char;
+          updateStatus(`Converted to: ${char === ' ' ? '[Space]' : char}`);
+        } else {
+          updateStatus("This is not a valid symbol.");
+        }
+
         currentMorse = '';
         morseSequenceEl.textContent = '';
-        updateStatus(`Converted to: ${char === ' ' ? '[Space]' : char}`);
       }
       resetTapState();
       resetInactivityTimer();
