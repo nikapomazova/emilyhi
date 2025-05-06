@@ -54,7 +54,7 @@ signButton.addEventListener("click", async () => {
             });
 
             alert('Verification email sent! Check your inbox (and spam folder!).');
-            window.location.href = '/logIn.html';
+            window.location.href = '/emilyhi/logIn.html';
           } catch (error) {
             console.log(error);
         }
